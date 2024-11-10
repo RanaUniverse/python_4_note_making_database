@@ -11,3 +11,7 @@ I am using Sqlmodel to store data of the notes user will create.
 Here User - Note: One - Many 📢
 
 
+1. first commit i did only add a simple user data storing mechanish
+
+2. Now in the second commit i will make a separate logic of data notes keeping idea
+

@@ -1,12 +1,5 @@
 """
-This is the sqlmodel practise code to store notes in this module mainly 
-i am just making this for practise only.
-
+Here i will make write the final topic of 
+my database logic, where the user and note will be
+connected to each others
 """
-
-from sqlmodel import (
-    create_engine,
-    Field,
-    Session,
-    SQLModel,
-)

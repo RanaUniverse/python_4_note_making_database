@@ -26,7 +26,7 @@ class User(SQLModel, table=True):
     password: str | None = Field(default=None)
 
 
-sqlite_file_name = "database.db"
+sqlite_file_name = "database_users.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 engine = create_engine(sqlite_url, echo=0)
@@ -163,7 +163,7 @@ def search_user_by_username(username_to_find: str | None = None):
 
 
 def main():
-    # create_db_and_tables()
+    create_db_and_tables()
     add_user_data(password="ldkfjdl")
     # search_user_by_username("manik")
 

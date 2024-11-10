@@ -11,3 +11,5 @@ wheels/
 
 # Below is the database file my code is generating
 database.db
+database_users.db
+database_notes.db
