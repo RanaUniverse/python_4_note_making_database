@@ -1,5 +1,4 @@
 """
-Here i will make write the final topic of 
-my database logic, where the user and note will be
-connected to each others
+This will be my app part completely
+This app will be a note storing app
 """

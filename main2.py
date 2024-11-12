@@ -1,16 +1,14 @@
 """
-This is just for checking of python learning
+this is also my practise file of python for different smalll things
 """
 
-from datetime import datetime, timedelta, timezone
+from faker import Faker
 
-indian_time = datetime.utcnow() + timedelta(hours=5, minutes=30)
-print(indian_time)
+fake = Faker()
 
+import random
 
-indian_time = datetime.now()
-print(indian_time)
+password = random.choice([fake.bothify("??##??"), None])
 
-indian_time = datetime.now(timezone(timedelta(hours=0, minutes=30)))
-print(indian_time)
+print(password)
 
