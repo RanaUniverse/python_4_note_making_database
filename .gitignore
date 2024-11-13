@@ -13,3 +13,8 @@ wheels/
 database.db
 database_users.db
 database_notes.db
+
+# This below files are the real databse file to save
+
+my_files/database.db
+my_files/database_note_user.db

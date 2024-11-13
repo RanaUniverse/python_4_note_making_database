@@ -15,3 +15,6 @@ Here User - Note: One - Many 📢
 
 2. Now in the second commit i will make a separate logic of data notes keeping idea
 
+3. I make my a sample checking funcions.
+
+4. In this time i have made a simple user registration and note making way. not so good.
