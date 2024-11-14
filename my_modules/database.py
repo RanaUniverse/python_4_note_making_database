@@ -11,7 +11,7 @@ from sqlmodel import (
 )
 
 
-sqlite_file_name = Path("my_files") / "database.db"
+# sqlite_file_name = Path("my_files") / "database.db"
 sqlite_file_name = Path.cwd() / "database.db"
 
 sqlite_url = f"sqlite:///{sqlite_file_name}"

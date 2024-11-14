@@ -29,37 +29,6 @@ from my_modules.colorful_terminal_module import TColor
 fake = Faker()
 
 
-def insert_one_new_user_row(
-    username: str,
-    user_id: int,
-    full_name: str | None = None,
-    email_id: str | None = None,
-    phone_no: int | None = None,
-    register_time: datetime.datetime | None = None,
-    notes_count: int | None = None,
-    is_allowed: bool = True,
-    password: str | None = None,
-):
-    """
-    This is incomplete no need to use
-    i am making this fun which will take the parameter of the UserPart table
-    columns and then it will save them in the database table i will just call
-    this fun in other places.
-    """
-    user_obj = UserPart(
-        username=username,
-        user_id=user_id,
-        full_name=full_name,
-        email_id=email_id,
-        phone_no=phone_no,
-        register_time=register_time,
-        notes_count=notes_count,
-        is_allowed=is_allowed,
-        password=password,
-    )
-    print(user_obj)
-
-
 def register_for_new_user():
     """
     I am making this fun which will take inputs from
@@ -68,26 +37,21 @@ def register_for_new_user():
     """
     print(TColor.BOLD + "A New User Register Page has Open:" + TColor.RESET)
     message = (
-        "Please make ready your: Username, Full Name, Email ID, Phone No, "
-        "Password.\nAfter this, we will make a unique user ID for you. Only "
-        "the username section is required. If you do not provide other "
-        "information, we will generate it for you and send it back. If the "
-        "username already exists, you need to choose a new one.\n"
-        "Making a new User Account!!!"
+        "Please Fillup The Details Below & Press Enter to Proceed..."
+        " Write '***' and press enter to exit this process"
     )
     print(message)
 
     # i need to take username from user
-
     username = input("CHoose a username (required): ").strip()
     if username == "***":
         return None  # i just want to exis the fun
     while not username:
         print("Username is required.")
         username = input("Please enter a username and then press enter: ").strip()
-    print(f"Your Valid Username: {username} ✅✅✅")
+    print(f"Your Valid Username: {username} ✅")
 
-    full_name = input("Please Enter Your Full Name: ").strip()
+    full_name = input(f"Please Enter Your Full Name: ").strip()
 
     if not full_name:
         full_name = None
@@ -199,8 +163,13 @@ def make_a_new_note():
     """
     # thsi will break when there is correct username otherwise only reprompt
     print(f"Please Fillup all the details Below to make a new Note.")
+
     while True:
         username = input("Just give your username here: ").strip()
+        if username == "***":
+            print("No Note is Making Thanks")
+            return None
+
         if not username:
             print("Please write ur username👇👇👇")
             # break # loop will continue if the username not given
@@ -282,8 +251,154 @@ def make_a_new_note():
                 print("One Unknow error when saving:", e)
 
 
+def edit_a_old_note():
+    """
+    This Funcion will take the note id and then
+    ask for correct user id and password and then it will
+    edit the old note
+    """
+    print(f"Please Fillup all the details Below to edit your own note.")
+
+    # This below part is for giving note id checking;
+    while True:
+        note_id = input(f"What is the note id of your note which you get previously: ")
+
+        if not note_id:
+            print("Please Write Your Note's ID and press enter.")
+        else:
+            if not note_id.isdigit():
+                print("Please Give Correct note id which is integer value.")
+                continue
+            note_id = int(note_id)
+            with Session(engine) as session:
+                statement = select(NotePart).where(NotePart.note_id == note_id)
+                note_obj = session.exec(statement).first()
+                if not note_obj:
+                    print("Please Enter Correct Note ID.")
+                    continue
+                if note_obj:
+                    note_password = note_obj.user.password  # type: ignore
+                    if note_password:
+                        print(f"You have a password for this note.")
+                    else:
+                        print(f"You have not any passwrod setup for this note.")
+                    break
+
+    # Now it will verify the user's password to allow him to edit note
+    print(f"Please Give Correct Id Password for this Note: {note_id}")
+
+    while True:
+        username = input(f"What is Your Username: ")
+        if not username:
+            print(f"Please Write ur username Connected with {note_id}")
+            continue
+        if username != note_obj.user.username:  # type: ignore
+            print(f"This username is not associated with this {note_id}")
+            continue
+
+        if username == note_obj.user.username:  # type: ignore
+            print(f"Your Username is matched against this note thanks.")
+            break
+
+    while True:
+        password = input(f"What is ur password:(username: {username}) ")
+        if not password:
+            password = None
+        if note_obj.user.password != password:  # type: ignore
+            print(f"Hello @{username}, Please Give correct id password, try agian")
+            continue
+        if note_obj.user.password == password:  # type: ignore
+            print(f"Hello @{username.upper()}, Thanks For Verify Your Account.")
+            break
+
+    # NOw on this line the user has verified username and password
+
+    print(
+        f"NOw you can edit your note title, if you dont press "
+        f"anything then i will not chang anything"
+    )
+
+    # Now i will give user a way if he want to delete the note
+    # or he want to edit his note part
+    del_or_edit = input(
+        "If you want to delete type Delete and press enter otherwise press none"
+    )
+    if del_or_edit == "delete" or del_or_edit == "del":
+        with Session(engine) as session:
+            session.delete(note_obj)
+            session.commit()
+            print(f"This Note has been deleted successully.\n{note_obj}")
+        return None
+    else:
+        print("You are now going to edit your note.")
+
+    # Now i will make the logic of chnage the title and content
+    print(f"Current title: {note_obj.title}")
+    new_title = input("Enter a new title or press Enter to keep the current title: ")
+    if new_title:
+        note_obj.title = new_title
+        print("Title updated.")
+    else:
+        print("Title remains unchanged.")
+
+    print(f"Current note content: {note_obj.note}")
+    # new_note_data = input("Enter new content or nothing to unchange: ")
+
+    text = (
+        f"If you want to append new information press 0 or 'append'"
+        f"If you want to replace old content by new content press 1 or 'replace',"
+    )
+
+    # below part checks if i am choose correct thigs to append or
+    # replace whole note content so i use while
+    while True:
+        edit_choice = input(text)
+
+        if edit_choice == "0" or edit_choice == "append":
+            extra_data = input("Please Write New Data to append to the last: ")
+            if extra_data:
+
+                if not note_obj.note:
+                    note_obj.note = ""
+                now_time_ist = datetime.datetime.now(
+                    datetime.timezone(datetime.timedelta(hours=5, minutes=30))
+                )
+                note_obj.note += f"\n{extra_data}"
+                note_obj.edited_date = now_time_ist
+                print("New Data Appended.")
+
+                with Session(engine) as session:
+                    session.add(note_obj)
+                    session.commit()
+
+            elif not extra_data:
+                print("No Extra Data is appending")
+
+            else:
+                print("No extra data has been appendedd")
+            break
+
+        elif edit_choice == "1" or edit_choice == "replace":
+            new_data = input("Enter the new data to replace fully or just enter:")
+            if new_data:
+                now_time_ist = datetime.datetime.now(
+                    datetime.timezone(datetime.timedelta(hours=5, minutes=30))
+                )
+                note_obj.note = new_data
+                note_obj.edited_date = now_time_ist
+                with Session(engine) as session:
+                    session.add(note_obj)
+                    session.commit()
+            else:
+                print("No New data is given. note will not change")
+            break
+        else:
+            print("Please select any valid either 0 or 1")
+            continue
+
+
 def terminal_color_check():
-    # TColor.reset_colors()
+    # TColor.disable_color()
     print(
         f"{TColor.RED}This "
         f"{TColor.GREEN}is "
@@ -299,6 +414,7 @@ def main():
     create_db_and_engine()
     register_for_new_user()
     make_a_new_note()
+    # edit_a_old_note()
     ...
 
 

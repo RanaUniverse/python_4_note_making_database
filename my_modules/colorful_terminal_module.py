@@ -3,7 +3,7 @@ This module help me to get colorful terminal
 i will import this module's Tcolor part to use in my terminal print
 part
 
-Most interesting part is i make a setattribut fun: Tcolor.reset_color()
+Most interesting part is i make a setattribut fun: Tcolor.desable_color()
 if i call this in my main.py this will not use any color setup anymore in terminal.
 
 A simple use case of this is below:
@@ -58,7 +58,7 @@ class TColor:
     CHECKING = OKCYAN  # This is for checing purpose only
 
     @classmethod
-    def reset_colors_old(cls):
+    def disable_color_old(cls):
         """
         Reset all the color codes to empty string so that i can call this in my main fun and
         all the formatting color will disable properly
@@ -82,7 +82,7 @@ class TColor:
         cls.CHECKING = ""  # type: ignore
 
     @classmethod
-    def reset_colors(cls):
+    def disable_color(cls):
         """
         Reset all the color codes to None, effectively disabling color formatting.
         This will use setattr to modify class attributes dynamically.
@@ -131,5 +131,5 @@ def main():
 
 
 if __name__ == "__main__":
-    TColor.reset_colors()
+    TColor.disable_color()
     main()
