@@ -1,4 +1,14 @@
-![image](https://github.com/user-attachments/assets/1f5641dc-8ed2-4d9b-b21a-6c1aee8b7c11)# A database System for Note Making App
+# A database System for Note Making App
+
+
+## How To Start This Project
+
+![image](https://github.com/user-attachments/assets/8a060565-f6b5-4e41-964f-e27f5b2a159d)
+
+```bash
+git clone https://github.com/RanaUniverse/python_4_note_making_database
+
+```
 
 I am using Sqlmodel to store data of the notes user will create.
 
