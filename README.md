@@ -18,3 +18,9 @@ Here User - Note: One - Many 📢
 3. I make my a sample checking funcions.
 
 4. In this time i have made a simple user registration and note making way. not so good.
+
+5. I have added note edit note del in one fun
+
+6. i have added a fun to see all the note the user have already now
+
+7. i have added a loop in the main fun so that it will going on continuously until i close it by ctrl + c
