@@ -10,6 +10,15 @@ git clone https://github.com/RanaUniverse/python_4_note_making_database
 
 ```
 
+After Clone thsi run the below command to check and work with sample data in the database 
+
+```bash
+cp my_files/fake_database_file.db database.db && echo "✅ Successfully copied to database.db. ℹ️ This file contains some sample data." || echo "❌ Failed to copy the database file."
+```
+
+
+
+
 I am using Sqlmodel to store data of the notes user will create.
 
 
