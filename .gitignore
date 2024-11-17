@@ -8,7 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
-.env
 
 # Below is the database file my code is generating
 database.db

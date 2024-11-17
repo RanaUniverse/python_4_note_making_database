@@ -1,92 +1,124 @@
 """
-i want to impliment my note database code with my bot but how?
-This is my bot i want to impliment my old note making app connected with 
-bot just for leaning, first my code there was just a bot interface connected with my 
-database which i need to impliment.
+First to work with existing sample data run this below command in the terminal:
+
+cp my_files/fake_database_file.db database.db && echo "✅ Successfully copied to database.db. ℹ️ This file contains some sample data." || echo "❌ Failed to copy the database file."
+
+
+
+This will be my app part completely
+
+This app will be a note storing app
+
+1. I have the tables in the models.py
+2. i have the engine and table created files in the database.py 
+3. i have changes my functions into different my modules for clean interface
 """
 
-# First Part is for load the private bot token value from .env file
-import os
-from dotenv import load_dotenv
+from my_modules.colorful_terminal_module import TColor
 
-
-import logging
-
-from telegram import Update
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    ContextTypes,
-    MessageHandler,
-    filters,
+from my_modules.database import create_db_and_engine
+from my_modules.note_related_module import (
+    make_a_new_note,
+    edit_a_old_note,
+    all_note_of_a_user,
+)
+from my_modules.user_related_module import (
+    register_for_new_user,
+    delete_a_user_data,
 )
 
 
-load_dotenv()
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+def terminal_color_check(show_color: bool = True):
+    # TColor.disable_color()
+    """
+    Prints colorful text in the terminal. If show_color is False,
+    disables color by uncommenting the disable_color line.
+    """
+    if not show_color:
+        TColor.disable_color()  # This disables color output in the terminal
+
+    print(
+        f"{TColor.RED}This "
+        f"{TColor.GREEN}is "
+        f"{TColor.YELLOW}Colorful "
+        f"{TColor.BLUE}Text "
+        f"{TColor.MAGENTA}in "
+        f"{TColor.BOLD}Terminal.{TColor.RESET}"
+    )
 
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logging.getLogger("httpx").setLevel(logging.WARNING)
+def main_old():
+    "This part is just for chekcing code"
+    terminal_color_check()
+    create_db_and_engine()
 
-logger = logging.getLogger(__name__)
+    # delete_a_user_data()
+    all_note_of_a_user()
 
-
-# Define a few command handlers. These usually take the two arguments update and
-# context.
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send a message when the command /start is issued."""
-    user = update.effective_user
-    if user:
-        text = f"Hello {user.full_name} this is a Example Bot"
-        await context.bot.send_message(user.id, text)
+    # register_for_new_user()
+    # make_a_new_note()
+    # edit_a_old_note()
 
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Send a message when the command /help is issued."""
-    if update.message:
-        user = update.message.from_user
-    else:
-        user = None
-    text = f"I Have many way first make a user which is you and then " "Make a new note"
-    if user:
-        await context.bot.send_message(user.id, text)
+def main():
+    import time
 
+    terminal_color_check(show_color=True)
+    create_db_and_engine()
 
-async def add_me_as_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """This will add thsi current user in the database"""
+    # This below part will just for Showing off 🍌🍌🍌
+    print(f"\n{TColor.MAGENTA}Starting Rana Universe App 🍌🍌🍌{TColor.RESET}", end=" ")
+    for _ in range(25):
+        time.sleep(0.04)
+        print(".", end="", flush=True)
+    time.sleep(1)
+    time.sleep(0.1)
 
+    while True:
+        print(f"\n{TColor.MAGENTA}{TColor.BOLD}Choose an action: {TColor.RESET}")
+        print("1. Register a new user")
+        time.sleep(0.2)
 
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """I will save this text in teh database against your name"""
-    text = "I will save this text in teh database against your name"
-    if update.message:
-        await update.message.reply_text(text)
+        print("2. Make a new note")
+        time.sleep(0.2)
 
+        print("3. Edit an old note")
+        time.sleep(0.2)
 
-def main() -> None:
-    """Start the bot."""
-    # Create the Application and pass it your bot's token.
+        print("4. Delete a user")
+        time.sleep(0.2)
 
-    if BOT_TOKEN:
-        application = Application.builder().token(BOT_TOKEN).build()
-    else:
-        application = Application.builder().token("RanaUniverse🍌🍌🍌").build()
+        print("5. View all notes of a user")
+        time.sleep(0.2)
 
-    # on different commands - answer in Telegram
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("help", help_command))
+        print("6. Exit")
 
-    # on non command i.e message - echo the message on Telegram
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+        choice = input("Please choose anything here (1-6): ").strip()
 
-    # Run the bot until the user presses Ctrl-C
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+        if choice == "1":
+            register_for_new_user()
+        elif choice == "2":
+            make_a_new_note()
+        elif choice == "3":
+            edit_a_old_note()
+        elif choice == "4":
+            delete_a_user_data()
+        elif choice == "5":
+            all_note_of_a_user()
+        elif choice == "6":
+            print("Exiting the program. Goodbye! 👋👋👋")
+            break
+        else:
+            print("Invalid choice. Please try again. ⚠️")
+
+        # Wait for 1 seconds to show the loop again
+        print("\nLoading", end=" ")
+        for _ in range(20):
+            time.sleep(0.05)
+            print(".", end="", flush=True)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
+    # main_old()
     main()

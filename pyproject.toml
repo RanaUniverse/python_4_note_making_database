@@ -1,12 +1,10 @@
 [project]
-name = "addingdatabasetotelegrambotforchecking"
+name = "python-4-note-making-database"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13.0"
 dependencies = [
     "faker==30.8.2",
-    "python-dotenv>=1.0.1",
-    "python-telegram-bot>=21.7",
     "sqlmodel==0.0.22",
 ]
