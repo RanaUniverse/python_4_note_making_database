@@ -18,8 +18,10 @@ from sqlmodel import (
 from sqlalchemy.exc import IntegrityError
 
 from my_modules.colorful_terminal_module import TColor
+
 from my_modules.models import UserPart
 from my_modules.database import engine
+
 
 fake = Faker()
 
@@ -28,9 +30,9 @@ def register_for_new_user():
     """
     I am making this fun which will take inputs from
     the user in the terminal part and add a new user data in the
-    database
+    database.
     """
-    print(TColor.BOLD + "A New User Register Page has Open:" + TColor.RESET)
+    print(TColor.BOLD + "Please Register Below For New Accoutn👇:" + TColor.RESET)
     message = (
         "Please Fillup The Details Below & Press Enter to Proceed..."
         " Write '***' and press enter to exit this process"
@@ -41,22 +43,40 @@ def register_for_new_user():
         username = input("Choose a username (Required): ").strip()
 
         # Exist when *** Comes
+        valid_username = fake.user_name()
         if username == "***":
             print(f"Registration Process Has been cancelled")
             return None
 
         if len(username) <= 3:
-            print(f"Username Should be minimum 4 character long")
+            print(
+                f"Username should be at least 4 characters long, "
+                f"e.g., {TColor.BLUE}@{valid_username}{TColor.RESET}"
+            )
             continue
+
+        if username.isdigit():
+            print(
+                f"Username cannot be entirely numeric. "
+                f"e.g., {TColor.BLUE}@{valid_username}{TColor.RESET}"
+            )
+            continue
+        
+        if " " in username:
+            print(
+                f"Username should not contain whitespace, "
+                f"e.g., {TColor.BLUE}@{valid_username}{TColor.RESET}"
+            )
+            continue
+
         else:
             print(f"Your Username is: {username}")
             break
 
     # 🍌🍌🍌 Just For Checking the final value in the loop
-    # print(f"After the loop finish the username is: {username}")
 
     while True:
-        full_name = input(f"Please Enter Your Full Name: ")
+        full_name = input(f"Please Enter Your Full Name: ").strip()
 
         if not full_name:
             print(f"Hello {username} You havn't any Full Name ❌")
@@ -79,9 +99,10 @@ def register_for_new_user():
         if not phone_no:
             phone_no = None
             print("No Phone Number is Provided ❌")
-            break  # Exit the loop, phone number is optional
+            break  # Exit loop, phone number is optional
 
         # Check if the input is a valid 10-digit Indian number
+        # Below i make some condition to think if the number is valid or not
         elif phone_no.isdigit() and len(phone_no) == 10 and phone_no[0] in "6789":
             phone_no = int(phone_no)  # Convert to integer for storing in the database
             print(f"Your Valid Phone Number: {phone_no} ✅✅✅")
@@ -90,20 +111,25 @@ def register_for_new_user():
         # Handle invalid cases based on the first digit
         elif phone_no.isdigit() and phone_no[0] in "012345":
             print(
-                f"❌ The number you entered starts with {phone_no[0]}, which is invalid. Please try again."
+                f"❌ The number you entered starts with {phone_no[0]}, "
+                "which is invalid. Please try again."
             )
 
         else:
             print(
-                "❌ Invalid input. Please enter a 10-digit Indian mobile number starting with 6, 7, 8, or 9."
+                "❌ Invalid input. Please enter a 10-digit Indian mobile "
+                "number starting with 6, 7, 8, or 9."
             )
 
-    password = input("Select a Password For YOur account: ")
+    password = input("Select a Password For YOUR Account: ")
     if not password:
         password = None
         print(f"No Password is given by you ❌")
     else:
-        print(f"Your Password is: {password} which is {len(password)} char longs.")
+        print(
+            f"Your Password is: {TColor.YELLOW}{password}{TColor.RESET} "
+            f"Your Password  is {len(password)} char longs."
+        )
 
     # Below Part is for starting of database logic to insert my data
     # The user_id will generated from the faker library for now🍌
@@ -112,6 +138,7 @@ def register_for_new_user():
     while True:
         # Generate user_id initially
         user_id = fake.random_number(digits=5, fix_len=True)
+
         now_time_ist = datetime.datetime.now(
             datetime.timezone(datetime.timedelta(hours=5, minutes=30))
         )
@@ -143,14 +170,14 @@ def register_for_new_user():
             if "user_data.username" in error_message:
                 print(
                     f"{TColor.YELLOW}"
-                    f"❌ The username({username}) is already taken. Please choose a different username."
+                    f"❌ The username({username}) is already taken. "
+                    "Please choose a different username."
                     f"{TColor.RESET}"
                 )
-                username = input(f"Please select another username than: {username}")
+                username = input(f"Please select Another Username: {username}")
 
                 if len(username) <= 3:
                     print(f"Username Should be minimum 4 character long")
-                    continue
 
                 continue
 
@@ -169,7 +196,11 @@ def register_for_new_user():
 
 def delete_a_user_data():
     """This will ask for users username, and password to del"""
-    print("You Are Going To Delete Your Account Please Be Careful🚨🚨🚨")
+    print(
+        f"{TColor.RED}"
+        "You Are Going To Delete Your Account Please Be Careful🚨🚨🚨"
+        f"{TColor.RESET}"
+    )
 
     # Asking for user name and password
     while True:
@@ -178,17 +209,23 @@ def delete_a_user_data():
             print("Please Enter a valid username and press enter")
             continue
         if username == "***":
-            print(f"Exiting This current Deleting Work")
+            print(f"You are exiting from delete your user account")
             return None
         if username:
-            print("Searching For your username existance...")
+            print("Searching For your username's existance 🔍🔍🔍.")
+
             with Session(engine) as session:
                 statement = select(UserPart).where(UserPart.username == username)
                 user_row = session.exec(statement).first()
                 if not user_row:
-                    print(f"This Username:- {username} is not in our system. Pls Retry")
+                    print(f"This Username:- {username} is not Found. Pls Retry 🔄")
                     continue
                 else:
+                    print(
+                        f"{TColor.RED}"
+                        f"You are going to delete @{username} Account 🗑️"
+                        f"{TColor.RESET}"
+                    )
                     password_of_the_row = user_row.password
                     if password_of_the_row:
                         print(f"Password Hint Len: {len(password_of_the_row)}")
@@ -216,8 +253,4 @@ def delete_a_user_data():
     #   so here i need to pass some unique id after account delete, which
     #   they can use to overown their own notes
 
-    print(
-        f"This Function has not made yet, as it need some confusion "
-        f"of what to do with the notes the user own, this is why i am "
-        f"not able to do this task for now"
-    )
+    print(f"User Account Delete Logic has not made Yet, 💔💔💔 ")

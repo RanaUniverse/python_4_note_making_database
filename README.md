@@ -1,22 +1,17 @@
 # A database System for Note Making App
 
 
-Just One code copy paste in terminal to make the environment ready, or check below others thigns line by line, 
+Copy paste the below line's which will copy the old database file to current dir.
 
 ```bash
-# Clone the repository
 git clone https://github.com/RanaUniverse/python_4_note_making_database
 
-# Navigate into the cloned directory
 cd python_4_note_making_database/
 
-# Sync and set up the virtual environment with uv
 uv sync
 
-# Copy the database file and confirm
 cp my_files/fake_database_file.db database.db && echo "✅ Successfully copied to database.db. ℹ️ This file contains some sample data." || echo "❌ Failed to copy the database file."
 
-# Open the project in VS Code
 code .
 ```
 

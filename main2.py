@@ -1,7 +1,6 @@
-from time import sleep
+username = input("Please Write Your Name: ").strip()
 
-for second in range(3, 0, -1):
-    print(second, end=" ", flush=True)
-    sleep(1)
-print(3)
-print("Go!")
+if " " in username:
+    print("space is present")
+else:
+    print("No space here")
